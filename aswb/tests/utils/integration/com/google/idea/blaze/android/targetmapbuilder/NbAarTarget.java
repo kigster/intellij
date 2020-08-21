@@ -59,9 +59,14 @@ public class NbAarTarget extends NbBaseTargetBuilder {
   }
 
   public NbAarTarget aar(String aarLabel) {
+    return aar(aarLabel, null);
+  }
+
+  public NbAarTarget aar(String aarLabel, String srcLabel) {
     aarArtifactLocationBuilder
         .setRelativePath(NbTargetMapUtils.workspacePathForLabel(blazePackage, aarLabel))
         .setIsSource(true);
+    javaTarget.jar(aarLabel, srcLabel); // TODO: should the jar point to something inside the aar?
     return this;
   }
 
