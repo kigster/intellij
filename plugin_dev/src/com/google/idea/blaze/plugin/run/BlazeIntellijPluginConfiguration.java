@@ -18,7 +18,6 @@ package com.google.idea.blaze.plugin.run;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -56,7 +55,6 @@ import com.intellij.execution.process.OSProcessHandler;
 import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
 import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.openapi.application.JetBrainsProtocolHandler;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
@@ -213,10 +211,6 @@ public class BlazeIntellijPluginConfiguration extends LocatableConfigurationBase
 
         IntellijWithPluginClasspathHelper.addRequiredVmParams(
             params, ideaJdk, deployedPluginInfo.javaAgents);
-
-        vm.defineProperty(
-            JetBrainsProtocolHandler.REQUIRED_PLUGINS_KEY,
-            Joiner.on(',').join(deployedPluginInfo.pluginIds));
 
         if (!vm.hasProperty(PlatformUtils.PLATFORM_PREFIX_KEY) && buildNumber != null) {
           String prefix = IdeaJdkHelper.getPlatformPrefix(buildNumber);
