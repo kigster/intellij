@@ -66,7 +66,16 @@ public class BlazeTestSystemPropertiesRule extends ExternalResource {
       buildNumber = BuildNumber.currentVersion().asString();
     }
     setIfEmpty("idea.plugins.compatible.build", buildNumber);
-    setIfEmpty(PlatformUtils.PLATFORM_PREFIX_KEY, determinePlatformPrefix(buildNumber));
+    String platformPrefix = determinePlatformPrefix(buildNumber);
+    setIfEmpty(PlatformUtils.PLATFORM_PREFIX_KEY, platformPrefix);
+
+    // b/166052760: Early in the android studio initialization, it accesses the user's home
+    // directory for retrieving some analytics settings, and to also set up an SDK from
+    // ~/Android/sdk, both of which it shouldn't be doing during testing. To fix this, we reset home
+    // directory to point to a temporary directory.
+    if ("AndroidStudio".equals(platformPrefix)) {
+      System.setProperty("user.home", new File(sandbox, "userhome").getAbsolutePath());
+    }
 
     // Tests fail if they access files outside of the project roots and other system directories.
     // Ensure runfiles and platform api are whitelisted.
